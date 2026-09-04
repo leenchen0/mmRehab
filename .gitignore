@@ -1,0 +1,46 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments and editors
+.env
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Data and generated artifacts
+datasets/
+checkpoints/
+data_collection/
+*.ckp
+*.pt
+*.pth
+*.onnx
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.mat
+*.bin
+*.mp4
+
+# Experiment outputs
+exps/**/logs/
+exps/**/outputs/
+exps/**/saved_models/
+code/modules/pointnet2/build/
+code/modules/pointnet2/dist/
+
+# Separately licensed body models
+code/smpl/smpl_*.pkl
+code/smpl/smplx/
+code/smpl/models/*
+!code/smpl/models/README.md

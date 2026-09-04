@@ -1,0 +1,181 @@
+{
+    "Name": "mmFresh Heatmap",
+    "Description": "mmFresh heatmap without static information",
+    "version": 1,
+    "args": {
+        "seed": 0,
+        "model": {
+            "type": "base", // Options ['base'].
+            // "backbone": "mars_cnn",
+            // "mars_cnn": {
+            //     "output_dim": 51
+            // },
+            "backbone": "mmfreshv2",
+            "seq2seq": true,
+            "discriminator": true,
+            "mmfreshv2": {
+                // encoder
+                "encoder_out": 128,
+                "n_filters": [8, 16, 32, 64, 128],
+                "embed_dim": 512,
+                "num_heads": 8,
+                "lstm_dim": 256,
+                "num_layers_lstm": 3,
+                "num_joints": 24
+            },
+            "teacher": {
+                "path": "../checkpoints/teacher.pt",
+                "model_input_data": ["depth_mesh"],
+                "input_data": ["depth_mesh"],
+                "model": {
+                    "encoder_out": 128,
+                    "n_filters": [8, 16, 32, 64, 128],
+                    "embed_dim": 512,
+                    "num_heads": 8,
+                    "lstm_dim": 256,
+                    "num_layers_lstm": 3
+                }
+            }
+        },
+        "training": {
+            "batch_size": 16,
+            "epoch": 10,
+            "save_step": 2,
+            "workers": 4,
+            "lr": 0.001,
+            "momentum": 0.9,
+            "weight_decay": 1e-4,
+            "lr_gamma": 0.1,
+            "lr_warmup_epochs": 0,
+            "lr_milestones": [5, 8],
+            "use_gender": false,
+            "smplx": false,
+            "losses": [
+                {
+                    "name": "pose",
+                    "fn": "mse",
+                    "weight": 0.2
+                }, {
+                    "name": "trans",
+                    "fn": "mse",
+                    "weight": 0.2
+                }, {
+                    "name": "shape",
+                    "fn": "mse",
+                    "weight": 0.2
+                }, {
+                    "name": "joints",
+                    "fn": "mae",
+                    "weight": 0.2
+                }, {
+                    "name": "vertices",
+                    "fn": "mae",
+                    "weight": 0.2
+                }, {
+                    "name": "smpl",
+                    "fn": "mesh",
+                    "weight": 0.2,
+                    "smplx": false,
+                    "return_joints": true
+                }, {
+                    "name": "diff_joints",
+                    "fn": "mse",
+                    "weight": 1.0
+                }, {
+                    "name": "kd_mse",
+                    "fn": "mse",
+                    "weight": 0.2
+                }
+            ]
+        },
+        "dataset": {
+            "format": "mmrehab",
+            "dir": "../../datasets/mmFresh_data_v4/generated_frames/real_features",
+            "training_sets": [{
+                "path": "lc",
+                "poses": []
+            }, {
+                "path": "gcz",
+                "poses": []
+            }, {
+                "path": "pzp",
+                "poses": []
+            }, {
+                "path": "qmh",
+                "poses": []
+            }, {
+                "path": "wck",
+                "poses": []
+            }, {
+                "path": "wyf",
+                "poses": []
+            }, {
+                "path": "wyf1",
+                "poses": []
+            }, {
+                "path": "wzf",
+                "poses": []
+            }, {
+                "path": "ycy",
+                "poses": []
+            }, {
+                "path": "zyy",
+                "poses": []
+            }],
+            "test_sets": [{
+                "path": "lc",
+                "poses": []
+            }, {
+                "path": "gcz",
+                "poses": []
+            }, {
+                "path": "pzp",
+                "poses": []
+            }, {
+                "path": "qmh",
+                "poses": []
+            }, {
+                "path": "wck",
+                "poses": []
+            }, {
+                "path": "wyf",
+                "poses": []
+            }, {
+                "path": "wyf1",
+                "poses": []
+            }, {
+                "path": "wzf",
+                "poses": []
+            }, {
+                "path": "ycy",
+                "poses": []
+            }, {
+                "path": "zyy",
+                "poses": []
+            }],
+            "mmrehab": {
+                "scheme": "random-split",
+                "test_first": false,
+                "train_ratio": 0.6,
+                "val_ratio": 0.2,
+                "test_ratio": 0.2,
+                "prev_frames": 5,
+                "post_frames": 5,
+                "min_frames": 32,
+                "max_frames": 32,
+                // "num_points": 64,
+                "feat_dim": 0,
+                "output_dim": 157,
+                "model_input_data": ["range_azimuths", "range_elevations", "range_dopplers"],
+                "input_data": ["range_azimuths", "range_elevations", "range_dopplers"],
+                // "pad": "mmbody",
+                "transforms": {
+                    // "range_azimuths": ["zscore"],
+                    // "range_elevations": ["zscore"]
+                },
+                "label_fields": ["smpl", "depth_mesh"],
+                "test_scene": "fake"
+            }
+        }
+    }
+}
